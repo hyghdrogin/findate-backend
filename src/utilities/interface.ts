@@ -49,6 +49,10 @@ export interface LoginInterface {
   password: string;
 }
 
+export interface WaitlistInterface {
+  email: string;
+}
+
 export interface Search {
   $search: string;
 }

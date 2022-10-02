@@ -5,12 +5,17 @@ import cors from "cors";
 import router from "./routes/indexRoutes";
 import config from "./config";
 import db from "./config/db";
+import WaitlistController from "./controllers/waitlistController";
+import validator from "./middlewares/validator";
+import validateWaitlist from "./validations/waitlistValidation";
 
 import reqLogger from "./utilities/requestLogger";
 import { CustomRequest } from "./utilities/interface";
 
 const app = express();
 const port = config.PORT || 5000;
+
+const { joinWaitlist } = WaitlistController;
 
 app.use(cors());
 app.use(express.json());
@@ -27,6 +32,8 @@ app.use("/api/v1", router);
 app.get("/", (req, res) => {
   res.send("Welcome to Findate app");
 });
+
+app.post("/", validator(validateWaitlist), joinWaitlist);
 
 // Global 404 error handler
 app.use((req, res) => res.status(404).send({
