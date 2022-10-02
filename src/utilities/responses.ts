@@ -1,23 +1,25 @@
+import { Response, Request } from "express";
+
 function errorResponse(
-  res,
-  statusCode,
-  error,
+  res: Response,
+  statusCode: number,
+  error: string,
 ) {
   const responseObject = { statusCode, error };
   return res.status(statusCode).send(responseObject);
 }
 
 function successResponse(
-  res,
-  statusCode,
-  message,
-  data = [],
+  res: Response,
+  statusCode: number,
+  message: string,
+  data: any = [],
 ) {
   const responseObject = { statusCode, message, data };
   return res.status(statusCode).send(responseObject);
 }
 
-const handleError = (err, req) => {
+const handleError = (err: any, req: Request) => {
   console.log(`
       Error caught at ${req.path}, 
       Request body: ${JSON.stringify(req.body)},
@@ -29,7 +31,7 @@ const handleError = (err, req) => {
   }`);
 };
 
-module.exports = {
+export {
   errorResponse,
   successResponse,
   handleError

@@ -1,20 +1,13 @@
-const { isEmpty } = require("lodash");
-const logger = require("pino");
-const dotenv = require("dotenv");
+import { isEmpty } from "lodash";
+import logger from "pino";
+import dotenv from "dotenv";
 
 dotenv.config();
 
 const config = {
   logger: logger(),
   PORT: process.env.PORT,
-  PG_USER: process.env.PG_USER,
-  PG_PASSWORD: process.env.PG_PASSWORD,
-  PG_DATABASE: process.env.PG_DATABASE,
-  HOST: process.env.HOST,
-  url: process.env.url,
-  DIALECT: process.env.DIALECT,
-  TEST_DATABASE_URL: process.env.TEST_DATABASE_URL,
-  PROD_DATABASE_URL: process.env.PROD_DATABASE_URL,
+  MONGO_URL: process.env.MONGO_URL as string,
   JWT_KEY: process.env.JWT_KEY,
   APP_NAME: process.env.APP_NAME,
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
@@ -35,4 +28,4 @@ if (!isEmpty(absentConfig)) {
   throw new Error(`Missing Config: ${absentConfig.join(", ")}`);
 }
 
-module.exports = config;
+export default config;

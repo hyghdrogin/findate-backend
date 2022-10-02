@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-expressions */
-const sgMail = require("@sendgrid/mail");
-const config = require("../database/config/index");
+import sgMail from "@sendgrid/mail";
+import config from "../config";
 
-sgMail.setApiKey(config.SENDGRID_API_KEY);
+sgMail.setApiKey(config.SENDGRID_API_KEY as string);
 
-const msg = {
+const msg: any = {
   from: `Findate <${config.SENDGRID_EMAIL}>`,
   mail_settings: { sandbox_mode: { enable: false } }
 };
@@ -13,7 +13,7 @@ const msg = {
   msg.mail_settings.sandbox_mode.enable = true;
 };
 
-const sendEmail = async (email, subject, message) => {
+const sendEmail = async (email: string, subject: string, message: string) => {
   try {
     msg.to = email;
     msg.subject = subject;
@@ -25,4 +25,4 @@ const sendEmail = async (email, subject, message) => {
   }
 };
 
-module.exports = sendEmail;
+export default sendEmail;
