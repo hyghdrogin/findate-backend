@@ -17,9 +17,13 @@ export default class WaitlistController {
   static async joinWaitlist(req: Request, res: Response) {
     try {
       const { email } = req.body;
-      const emailExist = await models.Waitlist.find({ email });
-      if (emailExist) {
+      const wEmailExist = await models.Waitlist.findOne({ email });
+      if (wEmailExist) {
         return errorResponse(res, 406, "You have registered for the waitlist already.");
+      }
+      const emailExist = await models.User.findOne({ email });
+      if (emailExist) {
+        return errorResponse(res, 406, "Users Can not join the waitlist");
       }
       const waitlist = await models.Waitlist.create({ email });
       const subject = "Findate";
