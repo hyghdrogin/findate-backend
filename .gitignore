@@ -14,4 +14,8 @@ node_modules/
 .env
 .env.test
 
-dist
+dist/
+src/controllers/messageController.ts
+src/controllers/notificationController.ts
+src/models/notificationModel.ts
+src/validations/notificationValidation.ts

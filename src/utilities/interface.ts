@@ -53,6 +53,15 @@ export interface WaitlistInterface {
   email: string;
 }
 
+export interface NotificationInterface{
+  _id: string;
+  message: string;
+  owner: string;
+  status: string;
+  title: string;
+  receiver: string;
+}
+
 export interface Search {
   $search: string;
 }
