@@ -12,12 +12,13 @@ const router = Router();
 const { verifyToken } = Authentication;
 const {
   createUser, loginUser, updateProfile, resendOtp, verifyAccount,
-  uploadProfilePicture, getAllUsers, reset, recover, uploadHeaderPicture
+  uploadProfilePicture, getAllUsers, getUserByUsername, reset, recover, uploadHeaderPicture
 } = UserController;
 
 router.post("/login", validator(validateLogin), loginUser);
 router.post("/register", validator(validateSignup), createUser);
 router.post("/otp/resend", validator(validateEmail), resendOtp);
+router.post("/", verifyToken, getUserByUsername);
 
 router.get("/", verifyToken, getAllUsers);
 

@@ -233,6 +233,25 @@ export default class UserController {
    * @param {object} res - The reset errorResponse object
    * @returns {object} Success message
    */
+  static async getUserByUsername(req: Request, res: Response) {
+    try {
+      const { username } = req.body;
+      const user = await models.User.findOne({ username }).select("-password");
+      if (!user) {
+        return errorResponse(res, 404, "User not found.");
+      }
+      return successResponse(res, 200, "User fetched successfully.", user);
+    } catch (error) {
+      handleError(error, req);
+      return errorResponse(res, 500, "Server error");
+    }
+  }
+
+  /**
+   * @param {object} req - The reset request object
+   * @param {object} res - The reset errorResponse object
+   * @returns {object} Success message
+   */
   static async recover(req: Request, res: Response) {
     try {
       const { email } = req.body;
