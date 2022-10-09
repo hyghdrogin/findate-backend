@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import models from "../models/indexModel";
+import models from "../models";
 import { successResponse, errorResponse, handleError } from "../utilities/responses";
 import jwtHelper from "../utilities/jwt";
 import { UserInterface, OtpInterface, FilterInterface } from "../utilities/interface";
@@ -21,7 +21,7 @@ export default class UserController {
   static async createUser(req: Request, res: Response) {
     try {
       const {
-        username, firstName, lastName, phone, email, password, gender, location
+        username, email, password, retypePassword
       } = req.body;
       const emailExist = await models.User.findOne({ email });
       if (emailExist) {
@@ -31,15 +31,14 @@ export default class UserController {
       if (usernameExist) {
         return errorResponse(res, 409, "Username already registered by another user.");
       }
-      const phoneExist = await models.User.findOne({ phone });
-      if (phoneExist) {
-        return errorResponse(res, 409, "Phone number already used by another user.");
+      if (password !== retypePassword) {
+        return errorResponse(res, 409, "Password mismatch.");
       }
       const hashedPassword = await bcrypt.hash(password, 10);
       await models.User.create({
-        username, firstName, lastName, email, password: hashedPassword, phone, gender, location, header: "", photo: ""
+        username, email, password: hashedPassword
       });
-      const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
+      const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
       await models.Otp.create({ email, token: otp });
       const subject = "WELCOME TO FINDATE";
       const message = `Welcome to Findate ${username}, you will need an OTP verification to Proceed. OTP: ${otp}`;
@@ -67,10 +66,10 @@ export default class UserController {
       if (user.active !== true) { return errorResponse(res, 403, "Account has been deactivated. Please contact admin."); }
       const validpass = await bcrypt.compare(password, user.password);
       if (!validpass) { return errorResponse(res, 404, "Password is not correct!."); }
-      const { _id, phone } = user;
-      const token = await generateToken({ _id, username, phone });
+      const { _id, email } = user;
+      const token = await generateToken({ _id, username, email });
       const userDetails = {
-        _id, username, firstName: user.firstName, lastName: user.lastName, gender: user.gender, location: user.location, phone: user.phone, role: user.role, photo: user.photo, header: user.header, active: user.active
+        _id, username, name: user.name, surname: user.surname, gender: user.gender, location: user.location, occupation: user.occupation, dob: user.dob, role: user.role, photo: user.photo, header: user.header, active: user.active
       };
       return successResponse(
         res,
@@ -92,8 +91,12 @@ export default class UserController {
   static async updateProfile(req: Request, res: Response) {
     try {
       const { _id } = req.user;
-      const { firstName, lastName } = req.body;
-      const user = await models.User.findByIdAndUpdate({ _id }, { firstName, lastName }, { new: true }).select("-password");
+      const {
+        name, surname, gender, occupation, location, interest, dob, about
+      } = req.body;
+      const user = await models.User.findByIdAndUpdate({ _id }, {
+        name, surname, gender, occupation, location, interest, dob, about
+      }, { new: true }).select("-password");
       return successResponse(
         res,
         200,
@@ -158,7 +161,7 @@ export default class UserController {
       const { email } = req.body;
       const user: UserInterface | null = await models.User.findOne({ email });
       if (!user) { return errorResponse(res, 404, "Email does not exist."); }
-      const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
+      const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
       await models.Otp.findOneAndUpdate({ email }, { token: otp, expired: false });
       const subject = "Resend otp";
       const message = `hi, kindly verify your account with this token ${otp}`;
@@ -257,7 +260,7 @@ export default class UserController {
       const { email } = req.body;
       const user = await models.User.findOne({ email });
       if (!user) { return errorResponse(res, 404, "Email does not exist."); }
-      const otp = `${Math.floor(100000 + Math.random() * 900000)}`;
+      const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
       await models.Otp.findOneAndUpdate(
         email,
         { token: otp, expired: false },

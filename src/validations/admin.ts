@@ -1,5 +1,5 @@
 import Joi from "joi";
-import objectId from "./commonValidation";
+import objectId from "./common";
 
 const validateUser = {
   query: Joi.object({

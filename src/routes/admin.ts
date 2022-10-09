@@ -1,17 +1,17 @@
 import { Router } from "express";
-import AdminController from "../controllers/adminController";
-import WaitlistController from "../controllers/waitlistController";
+import AdminController from "../controllers/admin";
+import NewslistController from "../controllers/newslist";
 import Authentication from "../middlewares/authentication";
 import validator from "../middlewares/validator";
-import validateUser from "../validations/adminValidation";
-import validateWaitlist from "../validations/waitlistValidation";
+import validateUser from "../validations/admin";
+import validateNewslist from "../validations/newslist";
 
 const router = Router();
 const { activeDeactivateUser } = AdminController;
-const { getAllWaitlist } = WaitlistController;
+const { getAllSubscriber } = NewslistController;
 const { verifyToken, verifyAdmin } = Authentication;
 
-router.get("/waitlist", verifyToken, verifyAdmin, validator(validateWaitlist), getAllWaitlist);
+router.get("/newslist", verifyToken, verifyAdmin, validator(validateNewslist), getAllSubscriber);
 
 router.patch("/users/:userId", verifyToken, verifyAdmin, validator(validateUser), activeDeactivateUser);
 

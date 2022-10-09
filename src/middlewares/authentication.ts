@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { errorResponse } from "../utilities/responses";
-import models from "../models/indexModel";
+import models from "../models";
 import config from "../config";
 
 /**

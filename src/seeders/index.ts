@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import config from "../config/index";
-import models from "../models/indexModel";
-import adminSeed from "./adminSeeder";
+import models from "../models";
+import adminSeed from "./admin";
 
 mongoose.connect(config.MONGO_URL, async () => {
   console.log("seeding started...");

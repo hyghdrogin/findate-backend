@@ -4,13 +4,16 @@ import { UserInterface, LoginInterface } from "../utilities/interface";
 export const validateSignup = (user: UserInterface) => {
   const schema = Joi.object({
     username: Joi.string().min(2).max(20).required(),
-    firstName: Joi.string().min(2).max(20).required(),
-    lastName: Joi.string().min(2).max(20).required(),
+    name: Joi.string().min(2).max(20),
+    surname: Joi.string().min(2).max(20),
     email: Joi.string().email().required(),
     password: Joi.string().required().min(6).max(16),
-    phone: Joi.string().required(),
-    gender: Joi.string().required(),
-    location: Joi.string().required(),
+    dob: Joi.date(),
+    occupation: Joi.string(),
+    interest: Joi.string(),
+    about: Joi.string(),
+    gender: Joi.string(),
+    location: Joi.string(),
     photo: Joi.string(),
     header: Joi.string(),
   });
@@ -27,8 +30,8 @@ export const validateLogin = (login: LoginInterface) => {
 
 export const validateProfile = (user: UserInterface) => {
   const schema = Joi.object({
-    firstName: Joi.string().min(2).max(20),
-    lastName: Joi.string().min(2).max(20)
+    name: Joi.string().min(2).max(20),
+    surname: Joi.string().min(2).max(20)
   });
   return schema.validate(user);
 };

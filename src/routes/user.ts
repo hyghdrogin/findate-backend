@@ -1,12 +1,12 @@
 import { Router } from "express";
-import UserController from "../controllers/userController";
+import UserController from "../controllers/user";
 import Authentication from "../middlewares/authentication";
 import validator from "../middlewares/validator";
 import parser from "../middlewares/upload";
 
 import {
   validateSignup, validateLogin, validateProfile, validateEmail, validateAccount
-} from "../validations/userValidation";
+} from "../validations/user";
 
 const router = Router();
 const { verifyToken } = Authentication;

@@ -3,11 +3,14 @@ export interface UserInterface {
   username?: string;
   email: string;
   password: string;
-  firstName?: string;
-  lastName?: string;
+  name?: string;
+  surname?: string;
+  dob?: Date;
   gender?: string;
   location?: string;
-  phone?: string;
+  occupation?: string;
+  interest?: string;
+  about?: string;
   photo?: string;
   header?: string;
   role?: string;
@@ -49,7 +52,7 @@ export interface LoginInterface {
   password: string;
 }
 
-export interface WaitlistInterface {
+export interface NewslistInterface {
   email: string;
 }
 

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import models from "../models/indexModel";
+import models from "../models";
 import { successResponse, errorResponse, handleError } from "../utilities/responses";
 
 /**
@@ -21,7 +21,7 @@ export default class AdminController {
       if (!user) { return errorResponse(res, 404, "User not found"); }
       let value;
       type === "activate" ? value = true : value = false;
-      const userData = await models.User.findByIdAndUpdate(userId, { active: value }, { new: true }).select("active");
+      const userData = await models.User.findByIdAndUpdate(userId, { active: value }, { new: true }).select("-password");
       return successResponse(res, 200, "User active status updated.", userData);
     } catch (error) {
       handleError(error, req);

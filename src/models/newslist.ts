@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import { WaitlistInterface } from "../utilities/interface";
+import { NewslistInterface } from "../utilities/interface";
 
-const waitlistSchema = new Schema(
+const newslistSchema = new Schema(
   {
     email: {
       type: String, unique: true, maxlength: 50, trim: true, lowercase: true
@@ -9,4 +9,4 @@ const waitlistSchema = new Schema(
   },
   { timestamps: true }
 );
-export default model<WaitlistInterface>("Waitlist", waitlistSchema);
+export default model<NewslistInterface>("Newslist", newslistSchema);

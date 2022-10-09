@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import express from "express";
 import cors from "cors";
-import router from "./routes/indexRoutes";
+import router from "./routes";
 import config from "./config";
 import db from "./config/db";
-import WaitlistController from "./controllers/waitlistController";
+import NewslistController from "./controllers/newslist";
 import validator from "./middlewares/validator";
-import validateWaitlist from "./validations/waitlistValidation";
+import validateNewslist from "./validations/newslist";
 
 import reqLogger from "./utilities/requestLogger";
 import { CustomRequest } from "./utilities/interface";
@@ -15,7 +15,7 @@ import { CustomRequest } from "./utilities/interface";
 const app = express();
 const port = config.PORT || 5000;
 
-const { joinWaitlist } = WaitlistController;
+const { joinNewslist } = NewslistController;
 
 app.use(cors());
 app.use(express.json());
@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to Findate app");
 });
 
-app.post("/", validator(validateWaitlist), joinWaitlist);
+app.post("/", validator(validateNewslist), joinNewslist);
 
 // Global 404 error handler
 app.use((req, res) => res.status(404).send({
@@ -43,8 +43,6 @@ app.use((req, res) => res.status(404).send({
 }));
 
 (async () => {
-  process.on("warning", (e) => config.logger.warn(e.stack));
-  console.log("Waiting for DATABASE Connection...");
   await db.connect();
   app.listen(config.PORT || 4000, async () => {
     console.log(
