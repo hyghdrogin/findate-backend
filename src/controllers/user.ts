@@ -297,4 +297,20 @@ export default class UserController {
       return errorResponse(res, 500, "Server error");
     }
   }
+
+  /**
+   * @param {object} req - The reset request object
+   * @param {object} res - The reset errorResponse object
+   * @returns {object} Success message
+   */
+  static async deleteAccount(req: Request, res: Response) {
+    try {
+      const { _id } = req.user;
+      await models.User.findByIdAndDelete({ _id });
+      return successResponse(res, 200, "Account deleted successfully, Kindly login.");
+    } catch (error) {
+      handleError(error, req);
+      return errorResponse(res, 500, "Server error");
+    }
+  }
 }
