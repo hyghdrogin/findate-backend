@@ -40,7 +40,7 @@ export default class WaitlistController {
   static async getAllSubscriber(req: Request, res: Response) {
     try {
       const people = await models.Newslist.find();
-      return successResponse(res, 200, "Waitlist mails fetched successfully", { total: people.length, people });
+      return successResponse(res, 200, "Newslist mails fetched successfully", { total: people.length, people });
     } catch (error) {
       handleError(error, req);
       return errorResponse(res, 500, "Server error");
