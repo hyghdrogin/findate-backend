@@ -262,9 +262,9 @@ export default class UserController {
       if (!user) { return errorResponse(res, 404, "Email does not exist."); }
       const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
       await models.Otp.findOneAndUpdate(
-        email,
+        { email },
         { token: otp, expired: false },
-        { upsert: true }
+        { new: true }
       );
       const subject = "Reset Password Otp";
       const message = `hi, kindly use this ${otp} to reset your password`;
@@ -291,6 +291,7 @@ export default class UserController {
       }
       const hashedPassword = await bcrypt.hash(password, 10);
       await models.User.findOneAndUpdate({ email: otp.email }, { password: hashedPassword });
+      await models.Otp.findOneAndUpdate({ email: otp.email }, { expired: true });
       return successResponse(res, 200, "Password reset successfully, Kindly login.");
     } catch (error) {
       handleError(error, req);
