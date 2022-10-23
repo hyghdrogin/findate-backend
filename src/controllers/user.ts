@@ -97,6 +97,7 @@ export default class UserController {
       const user = await models.User.findByIdAndUpdate({ _id }, {
         name, surname, gender, occupation, location, interest, dob, about
       }, { new: true }).select("-password");
+      await models.User.findByIdAndUpdate({ _id }, { updated: true });
       return successResponse(
         res,
         200,
@@ -209,10 +210,13 @@ export default class UserController {
    */
   static async getAllUsers(req: Request, res: Response) {
     try {
-      const { status, role, name } = req.query;
+      const {
+        status, role, name, updated
+      } = req.query;
       const filter = {} as FilterInterface;
       status ? filter.verified = status as string : filter.verified = "true";
       role ? filter.role = role as string : filter.role = "user";
+      updated ? filter.updated = updated as string : filter.updated = "true";
       if (name) {
         filter.$text = {
           $search: name as string

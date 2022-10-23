@@ -12,24 +12,20 @@ const userSchema = new Schema(
     password: { type: String },
     name: { type: String },
     surname: { type: String },
-    dob: { type: Date },
+    dob: { type: String },
     occupation: { type: String },
     interest: { type: String },
     about: { type: String },
-    gender: { type: String },
-    photo: { type: String },
+    gender: { type: String, enum: ["male", "female", "others"] },
+    photo: { type: String, upsert: true, default: "https://res.cloudinary.com/hyghdrogin/image/upload/v1666514739/Findate/user_bbdyin.png" },
     header: { type: String, upsert: true, default: "https://res.cloudinary.com/hyghdrogin/image/upload/v1665284795/Findate/findate_m0lrnn.jpg" },
     role: { type: String, enum: ["admin", "user"], default: "user" },
     verified: { type: Boolean, default: false },
     active: { type: Boolean, default: true },
+    updated: { type: Boolean, default: false },
     location: { type: String },
   },
   { timestamps: true }
 );
-
-userSchema.index({
-  firstName: "text",
-  lastName: "text",
-});
 
 export default model<UserInterface>("User", userSchema);

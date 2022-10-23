@@ -35,6 +35,7 @@ interface Person {
 export interface FilterInterface {
   verified?: string;
   role?: string;
+  updated?: string;
   $text: Person;
 }
 
