@@ -284,8 +284,9 @@ export default class UserController {
   static async getAllUsers(req: Request, res: Response) {
     try {
       const {
-        status, role, name, updated, page, limit
-      } : any = req.query;
+        status, role, name, updated,
+      } = req.query;
+      let { page, limit }: any = req.query;
       const filter = {} as FilterInterface;
       status
         ? (filter.verified = status as string)
@@ -299,6 +300,11 @@ export default class UserController {
           $search: name as string,
         };
       }
+      // eslint-disable-next-line no-mixed-operators
+      if (page === undefined || null && limit === undefined || null) {
+        page = 1;
+        limit = 5;
+      }
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
       const users = await models.User.find(filter)
@@ -310,7 +316,7 @@ export default class UserController {
       const count = await models.User.countDocuments();
       return successResponse(res, 200, "Users Fetched successfully.", {
         total: users.length,
-        totalPages: Math.floor(count / limit),
+        totalPages: Math.ceil(count / limit),
         currentPage: page,
         users
       });
