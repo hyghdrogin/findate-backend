@@ -299,16 +299,18 @@ export default class UserController {
           $search: name as string,
         };
       }
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
       const users = await models.User.find(filter)
         .select("-password")
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
+        .limit(endIndex)
+        .skip(startIndex)
         .exec();
 
       const count = await models.User.countDocuments();
       return successResponse(res, 200, "Users Fetched successfully.", {
         total: users.length,
-        totalPages: Math.ceil(count / limit),
+        totalPages: Math.floor(count / limit),
         currentPage: page,
         users
       });

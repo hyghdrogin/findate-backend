@@ -8,7 +8,7 @@ export const validateSignup = (user: UserInterface) => {
     surname: Joi.string().min(2).max(20),
     email: Joi.string().email().required(),
     password: Joi.string().required().min(6).max(16),
-    dob: Joi.date(),
+    dob: Joi.string(),
     occupation: Joi.string(),
     interest: Joi.string(),
     about: Joi.string(),
