@@ -3,6 +3,7 @@ export interface UserInterface {
   username?: string;
   email: string;
   password: string;
+  phone: number;
   name?: string;
   surname?: string;
   dob?: Date;

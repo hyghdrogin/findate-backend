@@ -31,8 +31,7 @@ export default class WaitlistController {
       }
       const newslist = await models.Newslist.create({ email });
       const subject = "Findate";
-      const message =
-        "Thanks for joining the newslist, you will be notified of our various news letters";
+      const message = "Thanks for joining the newslist, you will be notified of our various news letters";
       await sendEmail(email, subject, message);
       return successResponse(res, 200, "Newslist mail sent", newslist);
     } catch (error) {

@@ -10,6 +10,7 @@ const userSchema = new Schema(
       type: String, unique: true, maxlength: 15, trim: true, lowercase: true
     },
     password: { type: String },
+    phone: { type: Number },
     name: { type: String },
     surname: { type: String },
     dob: { type: String },
@@ -17,7 +18,7 @@ const userSchema = new Schema(
     interest: { type: String },
     about: { type: String },
     gender: { type: String, enum: ["male", "female", "others"] },
-    photo: { type: String, upsert: true, default: "https://res.cloudinary.com/hyghdrogin/image/upload/v1666514739/Findate/user_bbdyin.png" },
+    photo: { type: String, upsert: true, default: "https://res.cloudinary.com/hyghdrogin/image/upload/v1665284795/Findate/findate_m0lrnn.jpg" },
     header: { type: String, upsert: true, default: "https://res.cloudinary.com/hyghdrogin/image/upload/v1665284795/Findate/findate_m0lrnn.jpg" },
     role: { type: String, enum: ["admin", "user"], default: "user" },
     verified: { type: Boolean, default: false },

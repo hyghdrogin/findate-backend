@@ -12,7 +12,7 @@ const router = Router();
 const { verifyToken } = Authentication;
 const {
   createUser, loginUser, updateProfile, resendOtp, verifyAccount,
-  uploadProfilePicture, getAllUsers, getUserByUsername, reset, recover, uploadHeaderPicture, deleteAccount
+  uploadProfilePicture, getAllUsers, getUserByUsername, loginPasswordReset, reset, recover, uploadHeaderPicture, deleteAccount
 } = UserController;
 
 router.post("/login", validator(validateLogin), loginUser);
@@ -28,6 +28,7 @@ router.patch("/profile-picture", verifyToken, parser.single("photo"), uploadProf
 router.patch("/header-picture", verifyToken, parser.single("header"), uploadHeaderPicture);
 router.patch("/recover-account", validator(validateEmail), recover);
 router.patch("/reset-password", validator(validateAccount), reset);
+router.patch("/reset-password-login", verifyToken, validator(validateAccount), loginPasswordReset);
 
 router.delete("/", verifyToken, deleteAccount);
 
