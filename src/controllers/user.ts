@@ -92,7 +92,7 @@ export default class UserController {
         $or: [{ email }, { username }]
       });
       if (!user) {
-        return errorResponse(res, 404, "Username does not exist.");
+        return errorResponse(res, 404, "Username or Email does not exist.");
       }
       if (!user.verified) {
         return errorResponse(
