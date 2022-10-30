@@ -24,6 +24,7 @@ export const validateLogin = (login: LoginInterface) => {
   const schema = Joi.object({
     username: Joi.string().required(),
     password: Joi.string().required(),
+    remember: Joi.boolean()
   });
   return schema.validate(login);
 };

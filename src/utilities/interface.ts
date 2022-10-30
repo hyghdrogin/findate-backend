@@ -51,7 +51,9 @@ export interface OtpInterface {
 
 export interface LoginInterface {
   username: string;
+  email: string;
   password: string;
+  remember: boolean;
 }
 
 export interface NewslistInterface {

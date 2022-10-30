@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import models from "../models";
+import config from "../config";
 import {
   successResponse,
   errorResponse,
   handleError,
 } from "../utilities/responses";
-import jwtHelper from "../utilities/jwt";
 import {
   UserInterface,
   OtpInterface,
@@ -14,7 +15,6 @@ import {
 } from "../utilities/interface";
 import sendEmail from "../utilities/email";
 
-const { generateToken } = jwtHelper;
 /**
  * @class UserController
  * @description create, log in user
@@ -66,7 +66,7 @@ export default class UserController {
       });
       const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
       await models.Otp.create({ email, token: otp });
-      const subject = "WELCOME TO FINDATE";
+      const subject = "Welcome to Findate";
       const message = `Welcome to Findate ${username}, you will need an OTP verification to Proceed. OTP: ${otp}`;
       await sendEmail(email, subject, message);
       return successResponse(
@@ -87,9 +87,9 @@ export default class UserController {
    */
   static async loginUser(req: Request, res: Response) {
     try {
-      const { username, email, password } = req.body;
-      const user: UserInterface | null = await models.User.findOne({
-        $or: [{ email }, { username }]
+      const { username, password, remember } = req.body;
+      const user = await models.User.findOne({
+        $or: [{ email: username }, { username }],
       });
       if (!user) {
         return errorResponse(res, 404, "Username or Email does not exist.");
@@ -112,8 +112,15 @@ export default class UserController {
       if (!validpass) {
         return errorResponse(res, 404, "Password is not correct!.");
       }
-      const { _id, phone } = user;
-      const token = await generateToken({ _id, username, phone });
+      const { _id, email, phone } = user;
+      const jwtUser = { _id, email, phone };
+      let token;
+      console.log(remember);
+      if (remember) {
+        token = await jwt.sign(jwtUser, config.JWT_KEY, { expiresIn: "1d" });
+      } else {
+        token = await jwt.sign(jwtUser, config.JWT_KEY, { expiresIn: "3h" });
+      }
       const userDetails = {
         _id,
         username,
@@ -294,7 +301,7 @@ export default class UserController {
   static async getAllUsers(req: Request, res: Response) {
     try {
       const {
-        status, role, name, updated,
+        status, role, name, updated
       } = req.query;
       let { page, limit }: any = req.query;
       const filter = {} as FilterInterface;
@@ -311,7 +318,7 @@ export default class UserController {
         };
       }
       // eslint-disable-next-line no-mixed-operators
-      if (page === undefined || null && limit === undefined || null) {
+      if (page === undefined || (null && limit === undefined) || null) {
         page = 1;
         limit = 5;
       }
@@ -328,7 +335,7 @@ export default class UserController {
         total: users.length,
         totalPages: Math.ceil(count / limit),
         currentPage: page,
-        users
+        users,
       });
     } catch (error) {
       handleError(error, req);
@@ -446,11 +453,7 @@ export default class UserController {
         { _id },
         { password: hashedPassword }
       );
-      return successResponse(
-        res,
-        200,
-        "Password reset successfully."
-      );
+      return successResponse(res, 200, "Password reset successfully.");
     } catch (error) {
       handleError(error, req);
       return errorResponse(res, 500, "Server error");
