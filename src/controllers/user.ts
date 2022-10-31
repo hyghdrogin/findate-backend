@@ -115,7 +115,6 @@ export default class UserController {
       const { _id, email, phone } = user;
       const jwtUser = { _id, email, phone };
       let token;
-      console.log(remember);
       if (remember) {
         token = await jwt.sign(jwtUser, config.JWT_KEY, { expiresIn: "1d" });
       } else {
@@ -152,7 +151,7 @@ export default class UserController {
    */
   static async updateProfile(req: Request, res: Response) {
     try {
-      const { _id } = req.user;
+      const { _id } = req.details;
       const {
         name,
         surname,
@@ -192,7 +191,7 @@ export default class UserController {
    */
   static async uploadProfilePicture(req: Request, res: Response) {
     try {
-      const { _id } = req.user;
+      const { _id } = req.details;
       const user = await models.User.findByIdAndUpdate(
         _id,
         { photo: req.file?.path },
@@ -213,7 +212,7 @@ export default class UserController {
    */
   static async uploadHeaderPicture(req: Request, res: Response) {
     try {
-      const { _id } = req.user;
+      const { _id } = req.details;
       const user = await models.User.findByIdAndUpdate(
         _id,
         { header: req.file?.path },
@@ -436,7 +435,7 @@ export default class UserController {
    */
   static async loginPasswordReset(req: Request, res: Response) {
     try {
-      const { _id } = req.user;
+      const { _id } = req.details;
       const user: UserInterface | null = await models.User.findById({ _id });
       const { oldPassword, newPassword, retypeNewPassword } = req.body;
       if (user?.password != null) {
@@ -467,7 +466,7 @@ export default class UserController {
    */
   static async deleteAccount(req: Request, res: Response) {
     try {
-      const { _id } = req.user;
+      const { _id } = req.details;
       await models.User.findByIdAndDelete({ _id });
       return successResponse(
         res,

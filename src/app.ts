@@ -2,12 +2,16 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import express from "express";
 import cors from "cors";
+import passport from "passport";
+import session from "express-session";
 import router from "./routes";
 import config from "./config";
 import db from "./config/db";
 import NewslistController from "./controllers/newslist";
 import validator from "./middlewares/validator";
 import validateNewslist from "./validations/newslist";
+import models from "./models";
+import "./controllers/google";
 
 import reqLogger from "./utilities/requestLogger";
 import { CustomRequest } from "./utilities/interface";
@@ -20,6 +24,13 @@ const { joinNewslist } = NewslistController;
 app.use(cors());
 app.use(express.json());
 
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: config.SECRET,
+  cookie: { secure: true }
+}));
+
 declare global {
   namespace Express {
     interface Request extends CustomRequest { }
@@ -28,6 +39,18 @@ declare global {
 
 app.use(reqLogger); // request logger
 app.use("/api/v1", router);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser(async (id, done) => {
+  const user = await models.User.findById(id);
+  done(null, user);
+});
 
 app.get("/", (req, res) => {
   res.send("Welcome to Findate app");

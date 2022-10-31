@@ -6,6 +6,7 @@ export interface UserInterface {
   phone: number;
   name?: string;
   surname?: string;
+  googleId?: string;
   dob?: Date;
   gender?: string;
   location?: string;
@@ -22,7 +23,7 @@ export interface UserInterface {
 }
 
 export interface CustomRequest {
-  user: UserInterface;
+  details: UserInterface;
   file: object;
   params: object;
   query: object;
